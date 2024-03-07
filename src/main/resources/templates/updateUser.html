@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-    <form th:method="post" th:action="@{/users(id=${user.getId()})}" th:object="${user}">
+        <form th:method="post" th:action="@{/admin/update(id=${user.getId()})}" th:object="${user}">
         <table border="0" cellpadding="5">
             <tr>
                 <td>ID: </td>
@@ -20,10 +20,17 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="email">email: </label></td>
-                <td><input type="text" th:field="*{email}" id="email" min="2" max="45" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"></td>
+                <td><label for="email">Surname: </label></td>
+                <td><input type="text" th:field="*{email}" id="email" min="2" max="45" required pattern="[a-zA-Z]+"></td>
                 <td>
-                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Surname Error</div>
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email Error</div>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="roles">roles: </label></td>
+                <td><input type="text" th:field="*{roles}" id="roles" min="2" max="45" required pattern="[a-zA-Z]+"></td>
+                <td>
+                    <div th:if="${#fields.hasErrors('roles')}" th:errors="roles">roles Error</div>
                 </td>
             </tr>
             <tr>
