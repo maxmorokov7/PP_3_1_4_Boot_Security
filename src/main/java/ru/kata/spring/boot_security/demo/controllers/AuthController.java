@@ -14,7 +14,7 @@ import ru.kata.spring.boot_security.demo.util.UserValidator;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/auth")
+//@RequestMapping("/auth")
 public class AuthController {
 
     private UserValidator userValidator;
@@ -34,22 +34,21 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "auth/login";
+        return "login";
     }
 
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("user") User user) {
-        return "auth/registration";
+        return "registration";
     }
 
     @PostMapping("/registration")
     public String performRegistration(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "/auth/registration";
+            return "registration"; // Возвращаем форму регистрации с ошибками
         }
         registrationServices.register(user);
-        return "redirect:/auth/login";
+        return "redirect:/login"; // После успешной регистрации перенаправляем на страницу входа
     }
 }
