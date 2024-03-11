@@ -2,23 +2,24 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.kata.spring.boot_security.demo.services.UserDetails;
+import ru.kata.spring.boot_security.demo.model.User;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    @GetMapping("/info")
-    public String userInfo() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        return "/user";
+    @GetMapping("/")
+    public String showUserInfo(@CurrentSecurityContext(expression = "authentication.principal") User principal,
+                               Model model) {
+        model.addAttribute("user", principal);
+        Boolean isAdmin = principal.getAuthorities().stream().anyMatch(s -> s.getAuthority().contains("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+        return "user";
     }
-
 }

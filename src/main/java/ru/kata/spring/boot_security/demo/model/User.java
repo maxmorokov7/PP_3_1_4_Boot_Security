@@ -1,64 +1,102 @@
 package ru.kata.spring.boot_security.demo.model;
 
-
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import java.util.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User implements UserDetails {
+
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private long id;
+    private Integer userId;
 
-    @Column(name = "login")
-    @NotEmpty(message = "The name cannot be empty")
-    @Size(min = 2, max = 45, message = "Enter from 2 to 45 characters")
-    private String username;
+    @NotEmpty(message = "поле должно быть запонено")
+    @Size(min = 2, max = 100, message = "Имя должно быть больше 2 символов длиной")
+    @Column(name = "name")
+    private String name;
 
+    @NotEmpty(message = "поле не должно быть пустым")
+    @Column(name = "surname")
+    private String surname;
 
-    @Column
-    @NotEmpty(message = "The surname cannot be empty")
-    @Size(min = 2, max = 45, message = "Enter from 2 to 45 characters")
+    @Column(name = "password")
     private String password;
-
-    @Column
-    @NotEmpty(message = "The surname cannot be empty")
-    @Size(min = 2, max = 45, message = "Enter from 2 to 45 characters")
-    @Email
-    private String email;
-
     @ManyToMany(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Collection<Role> roles;
+    @JoinTable(name = "user_role")
+    private List<Role> role;
 
 
-    public long getId() {
-        return id;
+    public User() {
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
+    public User(int userId, String name, String surname) {
+        this.userId = userId;
+        this.name = name;
+        this.surname = surname;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(List<Role> role) {
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
     public String getUsername() {
-        return username;
+        return getName();
     }
 
     @Override
@@ -79,51 +117,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole()))
-                .collect(Collectors.toList());
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                '}';
     }
 }
