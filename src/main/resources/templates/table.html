@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a class="btn btn-success" th:href="@{/admin/new}">NEW USER</a>
+<br>
+<br>
+<a class="btn btn-success" th:href="@{/logout}">LOGOUT</a>
+<br>
+<br>
+<a class="btn btn-success" th:href="@{/user/}">HOME PAGE</a>
+<br>
+<br>
+<table class="table table-success table-striped">
+    <thead>
+    <tr>
+        <th scope="col">userId</th>
+        <br>
+        <br>
+        <th scope="col">name</th>
+        <br>
+        <br>
+        <th scope="col">surname</th>
+        <br>
+        <br>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="person : ${table}">
+
+        <td th:text="${person.userId}"/>
+
+        <td th:text="${person.name}"/>
+
+        <td th:text="${person.surname}"/>
+
+        <td>
+            <a class="btn btn-success" th:href="@{'/admin/edit?id=' + ${person.userId}}">EDIT</a>
+            <form method="POST" th:action="@{/admin/delete(id=${person.userId})}">
+
+                <button type="submit" class="btn btn-success">DELETE</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

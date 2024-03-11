@@ -1,36 +1,26 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Spring Security Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 </head>
 <body>
-<div>
-    <form th:method="post" th:action="@{/users(id=${user.getId()})}" th:object="${user}">
-        <table border="0" cellpadding="5">
-            <tr>
-                <td>ID: </td>
-                <td><input type="text" disabled th:field="*{id}"></td>
-            </tr>
-            <tr>
-                <td><label for="username">Name: </label></td>
-                <td><input type="text" th:field="*{username}" id="username" min="2" max="45" required pattern="[a-zA-Z]+"></td>
-                <td>
-                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</div>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="email">email: </label></td>
-                <td><input type="text" th:field="*{email}" id="email" min="2" max="45" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"></td>
-                <td>
-                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Surname Error</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2"><input type="submit" value="update"></td>
-            </tr>
-        </table>
-    </form>
+<form th:action="@{/logout}" method="post">
+    <button type="submit" class="btn btn-dark text-secondary">Logout</button>
+</form>
+<h1 class="display-4 text-center">Home Page</h1>
+<div class="d-grid gap-2 col-3 mx-auto">
+    <a class="btn btn-primary" th:if="${isAdmin}" th:href="@{'/admin/'}">TABLE</a>
 </div>
+<h1 class="text-center display-4">My name</h1>
+<h2 class="text-center display-6" th:text="${user.name}"/>
+<h1 class="text-center display-4">My surname</h1>
+<h2 class="text-center display-6" th:text="${user.surname}"/>
+<h1 class="text-center display-4">Roles</h1>
+<ul th:each="role : ${user.authorities}">
+    <li class="text-center" th:text="${role.authority}"></li>
+</ul>
 </body>
 </html>
