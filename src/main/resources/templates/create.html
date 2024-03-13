@@ -18,8 +18,17 @@
     <label for="password">Enter password</label>
     <input class="form-control" type="text" th:field="*{password}" id="password" required/>
     <br/>
-    <input type="submit" value="Create!"/>
+    <div>
+        <label><strong>Roles</strong>:</label>
+        <div th:each="role : ${user.getRoles()}">
+            <input type="checkbox" th:name="roles" th:value="${role.roleId}" id="role-${role.roleId}"
+                   th:checked="${false}"/>
+            <label th:for="${'role-' + role.roleId}" th:text="${role.name}"></label>
+        </div>
+        <br/>
 
+        <input type="submit" value="Create!"/>
+    </div>
 </form>
 
 </body>

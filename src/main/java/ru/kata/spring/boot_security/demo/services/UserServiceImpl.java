@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.services;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
@@ -10,53 +11,63 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepositories;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepositories userDao;
     private final RoleRepository roleRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserServiceImpl(UserRepositories userDAO, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepositories userDAO, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userDao = userDAO;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userDao.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserById(Integer id) {
         return userDao.findById(id).get();
     }
 
     @Override
+    @Transactional
     public void addUser(@Valid User user) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setRole(List.of(roleRepository.findRoleByName("ROLE_USER")));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
     }
 
     @Override
+    @Transactional
     public void removeUser(Integer id) {
         userDao.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void updateUser(@Valid User user) {
         User user1 = userDao.findById(user.getUserId()).get();
         if (user.getPassword().isEmpty()) {
             user.setPassword(user1.getPassword());
-        }else {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        user.setRole((List<Role>) user1.getAuthorities());
+        user.setRoles((Set<Role>) roleRepository.findAll());
         userDao.save(user);
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
     }
 }

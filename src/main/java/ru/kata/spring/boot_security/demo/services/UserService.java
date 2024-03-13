@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.validation.Valid;
@@ -11,4 +12,5 @@ public interface UserService {
     void addUser(User user);
     void removeUser(Integer id);
     void updateUser(@Valid User user);
+    List<Role> getRoles();
 }

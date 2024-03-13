@@ -29,7 +29,9 @@ public class AdminController {
 
     @GetMapping("/new")
     public String addUser(Model model) {
-        model.addAttribute("user", new User());
+        User user = new User();
+        user.setRoles(userService.getRoles());
+        model.addAttribute("user", user);
         return "create";
     }
 
@@ -51,7 +53,9 @@ public class AdminController {
 
     @GetMapping("/edit")
     public String updateUser(@RequestParam Integer id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+        User user = userService.getUserById(id);
+        user.setRoles(userService.getRoles());
+        model.addAttribute("user", user);
         return "edit";
     }
 
@@ -60,9 +64,11 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "edit";
         } else {
-            userService.updateUser(user);
+            userService.addUser(user);
             return "redirect:/admin/";
         }
     }
+
+
 }
 
