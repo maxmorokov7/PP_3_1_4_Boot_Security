@@ -39,16 +39,23 @@ public class AdminController {
         return "create";
     }
 
+//    @PostMapping("/new")
+//    public String add(@ModelAttribute("user") User user, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            return "create";
+//        } else {
+//            userService.addUser(user);
+//            return "redirect:/admin/";
+//        }
+//    }
+
     @PostMapping("/new")
     public String add(@ModelAttribute("user") User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "create";
-        } else {
+        if (!bindingResult.hasErrors()) {
             userService.addUser(user);
-            return "redirect:/admin/";
         }
+        return "redirect:/admin/";
     }
-
     @PostMapping("/delete")
     public String delete(@RequestParam Integer id) {
         userService.removeUser(id);
@@ -63,7 +70,7 @@ public class AdminController {
 //        return "edit";
 //    }
 
-//    @PostMapping("/edit")
+    //    @PostMapping("/edit")
 //    public String update(User user, BindingResult bindingResult) {
 //        if (bindingResult.hasErrors()) {
 //            return "edit";
@@ -72,15 +79,22 @@ public class AdminController {
 //            return "redirect:/admin/";
 //        }
 //    }
-@PostMapping("/edit")
-public String update(@RequestParam int id, @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("role") String[] roles) {
-    user.setUserId(id);
-//    user.setRoles(userService.getRoles());
-    if (!bindingResult.hasErrors()) {
-        userService.updateUser(user);
+//    @PostMapping("/edit")
+//    public String update(@RequestParam int id, @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("role") String[] roles) {
+//        user.setUserId(id);
+//        user.setRoles(userService.getRoles());
+//        if (!bindingResult.hasErrors()) {
+//            userService.updateUser(user);
+//        }
+//        return "redirect:/admin/";
+//    }
+
+    @PostMapping("/edit")
+    public String update(@RequestParam int id, User user, BindingResult bindingResult) {
+        user.setUserId(id);
+        if (!bindingResult.hasErrors()) {
+            userService.updateUser(user);
+        }
+        return "redirect:/admin/";
     }
-    return "redirect:/admin/";
 }
-
-}
-

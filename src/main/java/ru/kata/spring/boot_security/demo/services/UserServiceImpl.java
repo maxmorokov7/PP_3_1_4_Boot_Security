@@ -59,11 +59,10 @@ public class UserServiceImpl implements UserService {
         User user1 = getUserById(user.getUserId());
         user1.setName(user.getName());
         user1.setSurname(user.getSurname());
-        user1.setRoles((List<Role>) user.getAuthorities());
         if (!user.getPassword().isEmpty()) {
             user1.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-
+        user1.setRoles((List<Role>) user.getAuthorities());
         userDao.save(user1);
     }
 
