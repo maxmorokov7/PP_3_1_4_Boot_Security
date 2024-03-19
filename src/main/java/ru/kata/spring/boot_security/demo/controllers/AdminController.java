@@ -75,7 +75,7 @@ public class AdminController {
 @PostMapping("/edit")
 public String update(@RequestParam int id, @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("role") String[] roles) {
     user.setUserId(id);
-    user.setRoles(userService.getRoles());
+//    user.setRoles(userService.getRoles());
     if (!bindingResult.hasErrors()) {
         userService.updateUser(user);
     }
