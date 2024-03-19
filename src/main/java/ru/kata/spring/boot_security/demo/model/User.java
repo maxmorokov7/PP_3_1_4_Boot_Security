@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 
 
 @Entity
@@ -38,7 +39,7 @@ public class User implements UserDetails {
     private String password;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role")
-    private Collection<Role> role;
+    private List<Role> role;
 
     public User() {
     }
@@ -58,7 +59,7 @@ public class User implements UserDetails {
         return role;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.role = roles;
     }
 

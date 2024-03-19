@@ -56,14 +56,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(@Valid User user) {
-        User user1 = userDao.findById(user.getUserId()).get();
-        if (user.getPassword().isEmpty()) {
-            user.setPassword(user1.getPassword());
-        } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user1 = getUserById(user.getUserId());
+        user1.setName(user.getName());
+        user1.setSurname(user.getSurname());
+        user1.setRoles((List<Role>) user.getAuthorities());
+        if (!user.getPassword().isEmpty()) {
+            user1.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        user.setRoles((Set<Role>) roleRepository.findAll());
-        userDao.save(user);
+
+        userDao.save(user1);
     }
 
     @Override
